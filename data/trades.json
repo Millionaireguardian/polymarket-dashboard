@@ -3508,5 +3508,59 @@
     "amount": 2,
     "pnl": 0,
     "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:34.245Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2853644392550864,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:36.293Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2853242671705635,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:38.130Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28515688010230233,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:39.956Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28558559734706823,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:41.827Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28546903400045154,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:03:43.684Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2851319222918945,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
   }
 ]
