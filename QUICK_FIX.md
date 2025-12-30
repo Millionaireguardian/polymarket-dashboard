@@ -22,7 +22,7 @@ git init
 
 # Add remote (this will work even if it says "already exists" - just update it)
 git remote remove origin 2>/dev/null || true
-git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git
+git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git
 
 # Set branch to main
 git branch -M main
@@ -65,7 +65,7 @@ Check that everything is correct:
 ```bash
 cd public
 git remote -v
-# Should show: origin  https://github.com/millionaireguardian/polymarket-dashboard.git
+# Should show: origin  https://github.com/Millionaireguardian/polymarket-dashboard.git
 
 git branch
 # Should show: * main

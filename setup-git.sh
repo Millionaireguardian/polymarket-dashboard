@@ -20,7 +20,7 @@ git init
 # Add remote
 echo "Adding remote origin..."
 git remote remove origin 2>/dev/null || true
-git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git
+git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git
 
 # Set branch to main
 echo "Setting branch to main..."

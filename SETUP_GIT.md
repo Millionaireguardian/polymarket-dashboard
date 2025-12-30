@@ -15,7 +15,7 @@ git init
 
 # Add remote (replace with your actual repo URL)
 git remote remove origin 2>/dev/null || true
-git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git
+git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git
 
 # Set branch to main
 git branch -M main
@@ -42,7 +42,7 @@ npm run deploy-dashboard
 
 **Error: "remote origin already exists"**
 - Remove existing remote: `cd public && git remote remove origin`
-- Add correct remote: `git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git`
+- Add correct remote: `git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git`
 
 **Error: "not a git repository"**
 - Initialize: `cd public && git init`

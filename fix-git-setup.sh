@@ -21,7 +21,7 @@ if [ -d .git ]; then
     # Remove existing remote if wrong
     if git remote get-url origin >/dev/null 2>&1; then
         CURRENT_REMOTE=$(git remote get-url origin)
-        EXPECTED_REMOTE="https://github.com/millionaireguardian/polymarket-dashboard.git"
+        EXPECTED_REMOTE="https://github.com/Millionaireguardian/polymarket-dashboard.git"
         
         if [ "$CURRENT_REMOTE" != "$EXPECTED_REMOTE" ]; then
             echo "⚠️  Remote mismatch detected"
@@ -40,7 +40,7 @@ if [ -d .git ]; then
         fi
     else
         echo "➕ Adding remote origin..."
-        git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git
+                git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git
         echo "✅ Remote added"
     fi
     
@@ -70,7 +70,7 @@ else
     echo "Or manually:"
     echo "  cd public"
     echo "  git init"
-    echo "  git remote add origin https://github.com/millionaireguardian/polymarket-dashboard.git"
+    echo "  git remote add origin https://github.com/Millionaireguardian/polymarket-dashboard.git"
     echo "  git branch -M main"
     echo "  git add ."
     echo "  git commit -m 'Initial dashboard commit'"
