@@ -1,0 +1,5 @@
+# Ignore token files
+*.token
+.env.local
+secrets.sh
+
