@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymarket Arbitrage Tracker - $50+ Small Capital Bot</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🤖 Polymarket Arbitrage Bot</h1>
+                <div class="status">
+                    <span id="lastUpdate">Loading...</span>
+                    <span class="status-indicator" id="statusIndicator">●</span>
+                </div>
+            </div>
+            <p class="subtitle">Real-time $50+ Small Capital Tracker</p>
+        </header>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading trade data...</p>
+        </div>
+
+        <!-- Overview Cards -->
+        <div class="summary-cards">
+            <div class="card balance-card">
+                <div class="card-label">Current Balance</div>
+                <div class="card-value-container">
+                    <div class="card-value" id="currentBalance">$0.00</div>
+                    <span class="balance-arrow" id="balanceArrow">→</span>
+                </div>
+                <div class="card-change" id="balanceChange">$0.00 (0.00%)</div>
+            </div>
+            
+            <div class="card pnl-card">
+                <div class="card-label">Total P&L</div>
+                <div class="card-value" id="totalPnL">$0.00</div>
+                <div class="card-change" id="totalPnLPercent">0.00%</div>
+            </div>
+            
+            <div class="card winrate-card">
+                <div class="card-label">Win Rate</div>
+                <div class="winrate-container">
+                    <div class="winrate-chart">
+                        <canvas id="winRateChart"></canvas>
+                    </div>
+                    <div class="winrate-text" id="winRate">0%</div>
+                </div>
+                <div class="winrate-stats" id="winRateStats">0W / 0L</div>
+            </div>
+            
+            <div class="card market-card">
+                <div class="card-label">Most Active Market</div>
+                <div class="card-value market-name" id="mostTraded">-</div>
+                <div class="card-change" id="mostTradedCount">0 trades</div>
+            </div>
+        </div>
+
+        <!-- P&L Over Time Chart -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <h2>P&L Over Time</h2>
+                <div class="chart-controls">
+                    <button class="chart-btn active" data-period="all">All Time</button>
+                    <button class="chart-btn" data-period="7d">7 Days</button>
+                    <button class="chart-btn" data-period="24h">24 Hours</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Trade History -->
+        <div class="trades-section">
+            <div class="trades-header">
+                <h2>Trade History</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by market..." class="search-input">
+                    <button id="clearSearch" class="clear-btn">Clear</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="tradesTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="timestamp">
+                                Timestamp <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="market">
+                                Market <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="action">
+                                Action <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="price">
+                                Price <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="amount">
+                                Amount <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="pnl">
+                                P&L <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="balance">
+                                Balance After <span class="sort-icon">↕</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradesBody">
+                        <tr>
+                            <td colspan="7" class="loading">Loading trades...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            <p>Polymarket Arbitrage Bot – Real-time $50+ Small Capital Tracker</p>
+            <p class="footer-subtitle">Statistical arbitrage with quick TP/SL • Sub-second execution • Spread farming</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
