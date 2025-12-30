@@ -68,6 +68,24 @@ fi
 # Push
 echo ""
 echo "Pushing to GitHub..."
+
+# Try to use GITHUB_TOKEN from environment if available
+if [ -n "$GITHUB_TOKEN" ]; then
+    echo "Using GITHUB_TOKEN from environment..."
+    if git push https://${GITHUB_TOKEN}@github.com/Millionaireguardian/polymarket-dashboard.git main; then
+        echo ""
+        echo "✅ Successfully pushed to GitHub!"
+        echo ""
+        echo "🌐 Dashboard available at:"
+        echo "   https://Millionaireguardian.github.io/polymarket-dashboard/"
+        echo ""
+        exit 0
+    else
+        echo "❌ Push with token failed, trying regular push..."
+    fi
+fi
+
+# Try regular push
 if git push origin main; then
     echo ""
     echo "✅ Successfully pushed to GitHub!"
@@ -77,12 +95,12 @@ if git push origin main; then
     echo ""
 else
     echo ""
-    echo "❌ Push failed. You may need to authenticate."
+    echo "❌ Push failed. You need to authenticate."
     echo ""
-    echo "Options:"
-    echo "1. Use GitHub CLI: gh auth login"
-    echo "2. Use Personal Access Token:"
-    echo "   export GITHUB_TOKEN=your_token"
+    echo "Set your GitHub Personal Access Token:"
+    echo "   export GITHUB_TOKEN=your_token_here"
+    echo ""
+    echo "Then run this script again, or push directly:"
     echo "   git push https://\${GITHUB_TOKEN}@github.com/Millionaireguardian/polymarket-dashboard.git main"
     echo ""
     exit 1
