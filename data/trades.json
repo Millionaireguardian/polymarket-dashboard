@@ -9466,5 +9466,788 @@
     "amount": 2,
     "pnl": 0,
     "balance": 12.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:33.462Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48206177280360324,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 48.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:34.952Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4813770897223206,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 46.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:36.289Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48171930448865263,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 44.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:37.538Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4811451371017027,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 42.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:38.793Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4815641175788202,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 40.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:40.043Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4819154726479391,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 38.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:41.307Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4818282144932016,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 36.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:42.565Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812839452659486,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 34.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:43.819Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812115366937754,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 32.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:30:45.065Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48189706415975836,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 30.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:46.312Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48174383034859797,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 28.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:47.567Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4818821558371902,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 26.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:48.814Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.481252229913044,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 24.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:50.070Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48200425539098746,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 22.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:51.323Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48187819995115694,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 20.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:52.577Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817993513504703,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 18.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:53.826Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.481414179932815,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 16.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:55.085Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4813411992233731,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 14.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:56.412Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820604208387717,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 12.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:57.746Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48140894317831695,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 10.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:30:58.999Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.482022677954653,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 8.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:00.242Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48163034708970115,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 6.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:01.486Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4811775592669596,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 4.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:02.908Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48198815418456004,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 2.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:31:04.329Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4811956927409399,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 0.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:31:05.681Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48165314834751294,
+    "amount": 2,
+    "pnl": 0,
+    "balance": -1.1243959999999973
+  },
+  {
+    "timestamp": "2025-12-31T09:31:07.124Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820559139905261,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 48.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:08.541Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48131157133500546,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 46.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:09.961Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.481673295634904,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 44.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:11.384Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4818824760439214,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 42.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:12.794Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48200436491407533,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 40.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:14.118Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4815733232902958,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 38.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:15.363Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48155520407230656,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 36.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:16.622Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.481860865344366,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 34.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:19.042Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48170163090691503,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 32.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:20.390Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814553041882082,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 30.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:21.792Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814238186133313,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 28.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:23.050Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48201930057664566,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 26.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:24.296Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48158522306375523,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 24.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:25.548Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814669970927867,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 22.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:26.791Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48139852905480035,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 20.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:28.050Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814603053916148,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 18.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:29.348Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814177378018574,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 16.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:30.610Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817321338901175,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 14.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:32.056Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817518205013197,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 12.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:33.312Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820345778408758,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 10.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:34.564Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.481885234855034,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 8.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:35.806Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4811598084557354,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 6.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:37.054Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48178065261939873,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 4.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:38.313Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48202897950588797,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 2.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:31:39.568Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4811839358982227,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 0.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:31:40.818Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48186628898388845,
+    "amount": 2,
+    "pnl": 0,
+    "balance": -1.1243959999999973
+  },
+  {
+    "timestamp": "2025-12-31T09:31:42.059Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814546007703507,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 48.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:44.339Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48112286082148187,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 46.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:45.598Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817973383826387,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 44.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:46.845Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48166519315443,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 42.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:48.091Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820393993287796,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 40.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:49.341Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4818427046929222,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 38.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:50.768Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817299335992751,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 36.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:52.214Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817094715760906,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 34.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:53.634Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812774615901798,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 32.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:31:55.102Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4816422544617928,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 30.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:56.565Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4813905994283984,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 28.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:57.927Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812750492915695,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 26.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:31:59.389Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48119450844314754,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 24.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:00.804Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812563243022637,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 22.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:02.264Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814548213319653,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 20.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:03.722Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48139581131825193,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 18.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:05.240Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4818577018210473,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 16.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:06.660Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4813140395058765,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 14.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:08.164Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4819099160074233,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 12.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:09.594Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820296871842009,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 10.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:11.026Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48154760966702453,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 8.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:13.448Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48139417327763806,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 6.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:14.811Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812708013932801,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 4.875604000000003
+  },
+  {
+    "timestamp": "2025-12-31T09:32:16.169Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48165909713149574,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 2.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:32:17.585Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4819859066853087,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 0.8756040000000027
+  },
+  {
+    "timestamp": "2025-12-31T09:32:19.027Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4819977670111972,
+    "amount": 2,
+    "pnl": 0,
+    "balance": -1.1243959999999973
+  },
+  {
+    "timestamp": "2025-12-31T09:32:20.377Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814230449684225,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 48.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:21.758Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48110293155430295,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 46.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:23.093Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814779373159054,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 44.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:24.424Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48167839067382634,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 42.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:25.846Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.48192174403984595,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 40.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:27.206Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4820241715787608,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 38.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:28.592Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4814401607948421,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 36.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:30.029Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4812382915580181,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 34.875604
+  },
+  {
+    "timestamp": "2025-12-31T09:32:31.381Z",
+    "market": "Lighter FDV above $1B?",
+    "action": "BUY",
+    "price": 0.4817122134622221,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 32.875604
   }
 ]
