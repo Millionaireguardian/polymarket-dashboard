@@ -16,17 +16,49 @@ echo ""
 
 # Set up the GitHub token
 echo "Setting up GitHub Personal Access Token..."
-export GITHUB_TOKEN="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"
 
-# Add to .bashrc for persistence (WSL)
-if [ -f ~/.bashrc ]; then
-    if ! grep -q "GITHUB_TOKEN=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" ~/.bashrc; then
-        echo "" >> ~/.bashrc
-        echo "# GitHub Personal Access Token for polymarket-dashboard" >> ~/.bashrc
-        echo "export GITHUB_TOKEN=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" >> ~/.bashrc
-        echo "✅ Token added to ~/.bashrc for persistence"
-    else
-        echo "✅ Token already in ~/.bashrc"
+# Check if token is provided as environment variable or in .bashrc
+if [ -n "$GITHUB_TOKEN" ]; then
+    GITHUB_TOKEN_INPUT="$GITHUB_TOKEN"
+    echo "Using GITHUB_TOKEN from environment"
+elif [ -f ~/.bashrc ] && grep -q "export GITHUB_TOKEN=" ~/.bashrc; then
+    # Extract token from .bashrc
+    GITHUB_TOKEN_INPUT=$(grep "export GITHUB_TOKEN=" ~/.bashrc | head -1 | sed 's/.*GITHUB_TOKEN=//' | tr -d '"' | tr -d "'")
+    if [ -n "$GITHUB_TOKEN_INPUT" ]; then
+        echo "Using GITHUB_TOKEN from ~/.bashrc"
+        export GITHUB_TOKEN="$GITHUB_TOKEN_INPUT"
+    fi
+fi
+
+# If still not set, prompt for it
+if [ -z "$GITHUB_TOKEN_INPUT" ]; then
+    echo "Please enter your GitHub Personal Access Token:"
+    echo "(Token will be stored in ~/.bashrc, not in this repository)"
+    read -s GITHUB_TOKEN_INPUT
+fi
+
+if [ -z "$GITHUB_TOKEN_INPUT" ]; then
+    echo "⚠️  No token provided. You can set it later with:"
+    echo "   export GITHUB_TOKEN=your_token_here"
+    echo "   Or run this script again with: GITHUB_TOKEN=your_token bash setup-github.sh"
+else
+    export GITHUB_TOKEN="$GITHUB_TOKEN_INPUT"
+    
+    # Add to .bashrc for persistence (WSL)
+    if [ -f ~/.bashrc ]; then
+        # Remove old token lines if exists
+        sed -i '/^export GITHUB_TOKEN=ghp_/d' ~/.bashrc
+        sed -i '/# GitHub Personal Access Token for polymarket-dashboard/d' ~/.bashrc
+        
+        # Add new token
+        if ! grep -q "GITHUB_TOKEN=$GITHUB_TOKEN_INPUT" ~/.bashrc; then
+            echo "" >> ~/.bashrc
+            echo "# GitHub Personal Access Token for polymarket-dashboard" >> ~/.bashrc
+            echo "export GITHUB_TOKEN=$GITHUB_TOKEN_INPUT" >> ~/.bashrc
+            echo "✅ Token added to ~/.bashrc for persistence"
+        else
+            echo "✅ Token already in ~/.bashrc"
+        fi
     fi
 fi
 

@@ -21,7 +21,11 @@ fi
 echo "✅ Git credential cache cleared"
 echo ""
 echo "💡 Now use the token via:"
-echo "   export GITHUB_TOKEN=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"
+echo "   export GITHUB_TOKEN=your_token_here"
+echo "   bash push-github.sh"
+echo ""
+echo "   Or if token is in ~/.bashrc:"
+echo "   source ~/.bashrc"
 echo "   bash push-github.sh"
 echo ""
 

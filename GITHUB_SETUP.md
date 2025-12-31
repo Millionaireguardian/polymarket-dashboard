@@ -59,7 +59,12 @@ Your GitHub Personal Access Token is stored in:
 If you need to use the token manually:
 
 ```bash
-export GITHUB_TOKEN=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
+# Token should be in ~/.bashrc after running setup-github.sh
+source ~/.bashrc
+bash push-with-token.sh
+
+# Or set it manually:
+export GITHUB_TOKEN=your_token_here
 bash push-with-token.sh
 ```
 
@@ -117,10 +122,29 @@ git config user.name "Nuke Rewards Dev"
 git config user.email "Millionaireguardian@users.noreply.github.com"
 ```
 
+### Push blocked by GitHub Push Protection
+If you see "Repository rule violations - Push cannot contain secrets":
+
+**Quick Fix (Recommended):**
+1. Visit the URLs provided in the error message to allow the secrets:
+   - https://github.com/Millionaireguardian/polymarket-dashboard/security/secret-scanning/unblock-secret/37ZIjiHdfdRtviQ8in5EORlXQbd
+   - https://github.com/Millionaireguardian/polymarket-dashboard/security/secret-scanning/unblock-secret/37bPzRFmfhyxQiZRnVMgZghNZ2g
+2. Then push again: `bash push-github.sh`
+
+**Why this happens:**
+- Old commits in git history contain tokens
+- Current files are clean, but GitHub scans all commits
+- Allowing the secret tells GitHub you're aware and it's intentional
+
+**Long-term fix:**
+- Rewrite git history to remove tokens (complex, requires force push)
+- Or create a fresh repository without the old commits
+
 ## Security Notes
 
 - ✅ Token is stored in `~/.bashrc` (local to your WSL environment)
-- ✅ Token is NOT hardcoded in any script files
+- ✅ Token is NOT hardcoded in any script files (current version)
 - ✅ Token is only used via environment variable
 - ⚠️  Keep your `~/.bashrc` file secure and don't share it
+- ⚠️  Old commits may contain tokens - use GitHub's allow secret feature if needed
 
