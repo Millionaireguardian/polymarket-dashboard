@@ -105,14 +105,21 @@ header h1 {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--profit);
+    background: var(--text-secondary);
     animation: pulse 2s infinite;
+    box-shadow: 0 0 8px var(--text-secondary);
+}
+
+.status-indicator.active {
+    background: var(--profit);
     box-shadow: 0 0 8px var(--profit);
+    animation: pulse 1s infinite;
 }
 
 .status-indicator.offline {
     background: var(--loss);
     box-shadow: 0 0 8px var(--loss);
+    animation: none;
 }
 
 @keyframes pulse {
@@ -528,6 +535,11 @@ tbody tr:last-child td {
 .pnl-negative {
     color: var(--loss);
     font-weight: 600;
+}
+
+.pnl-neutral {
+    color: var(--text-secondary);
+    font-weight: 400;
 }
 
 .loading, .empty {

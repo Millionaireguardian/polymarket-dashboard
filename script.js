@@ -259,15 +259,53 @@ function updateStatus(online) {
     const indicator = document.getElementById('statusIndicator');
     const lastUpdate = document.getElementById('lastUpdate');
     
+    // Check if bot is actively running (has recent trades within last 5 minutes)
+    const isBotActive = checkBotActive();
+    
     if (indicator) {
-        indicator.className = online ? 'status-indicator' : 'status-indicator offline';
+        if (isBotActive) {
+            indicator.className = 'status-indicator active';
+            indicator.title = 'Bot is actively running';
+        } else if (online) {
+            indicator.className = 'status-indicator';
+            indicator.title = 'Dashboard online (bot may be offline)';
+        } else {
+            indicator.className = 'status-indicator offline';
+            indicator.title = 'Dashboard offline';
+        }
     }
     
     if (lastUpdate) {
-        lastUpdate.textContent = online 
-            ? `Last updated: ${new Date().toLocaleTimeString()} (refreshes every 30s)`
-            : 'Offline';
+        if (isBotActive) {
+            const lastTrade = getLastTradeTime();
+            const minutesAgo = lastTrade ? Math.floor((Date.now() - new Date(lastTrade).getTime()) / 60000) : 0;
+            lastUpdate.textContent = `Bot active - Last trade: ${minutesAgo}m ago (refreshes every 30s)`;
+        } else if (online) {
+            lastUpdate.textContent = `Dashboard online - Bot appears offline (refreshes every 30s)`;
+        } else {
+            lastUpdate.textContent = 'Offline - Cannot load data';
+        }
     }
+}
+
+// Check if bot is actively running (has trades within last 5 minutes)
+function checkBotActive() {
+    if (tradesData.length === 0) return false;
+    
+    const lastTrade = tradesData[tradesData.length - 1];
+    if (!lastTrade || !lastTrade.timestamp) return false;
+    
+    const lastTradeTime = new Date(lastTrade.timestamp).getTime();
+    const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+    
+    return lastTradeTime > fiveMinutesAgo;
+}
+
+// Get timestamp of last trade
+function getLastTradeTime() {
+    if (tradesData.length === 0) return null;
+    const lastTrade = tradesData[tradesData.length - 1];
+    return lastTrade ? lastTrade.timestamp : null;
 }
 
 // Render dashboard with current data
@@ -288,19 +326,73 @@ function calculateSummary() {
     const trades = tradesData;
     
     if (trades.length === 0) {
-        updateSummaryCards(0, 0, 0, 0, 0, 0, '-', 0);
+        updateSummaryCards(0, 0, 0, 0, 0, 0, '-', 0, 0, 0);
         return;
     }
 
-    // Current balance (last trade's balance)
-    const currentBalance = trades[trades.length - 1].balance || 0;
-    const initialBalance = trades[0].balance - (trades[0].pnl || 0) || 50; // Estimate initial
-    const balanceChange = currentBalance - initialBalance;
-    const balanceChangePercent = initialBalance > 0 ? (balanceChange / initialBalance) * 100 : 0;
+    // Sort trades by timestamp to ensure correct order
+    const sortedTrades = [...trades].sort((a, b) => 
+        new Date(a.timestamp) - new Date(b.timestamp)
+    );
+
+    // Find the last trade with a valid balance
+    let currentBalance = 0;
+    for (let i = sortedTrades.length - 1; i >= 0; i--) {
+        const balance = parseFloat(sortedTrades[i].balance);
+        if (balance > 0) {
+            currentBalance = balance;
+            break;
+        }
+    }
     
-    // Total P&L (sum of all P&L)
-    const totalPnL = trades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
-    const totalPnLPercent = initialBalance > 0 ? (totalPnL / initialBalance) * 100 : 0;
+    // If no valid balance found, calculate from trades
+    if (currentBalance === 0 && sortedTrades.length > 0) {
+        // Start with a reasonable initial balance
+        let runningBalance = 50; // Default starting balance
+        for (const trade of sortedTrades) {
+            const amount = parseFloat(trade.amount || 0);
+            if (trade.action === 'BUY') {
+                runningBalance -= amount;
+            } else if (trade.action === 'SELL') {
+                runningBalance += amount;
+            } else {
+                runningBalance -= amount; // Default to BUY
+            }
+        }
+        currentBalance = runningBalance;
+    }
+    
+    // Calculate initial balance: first trade's balance + first trade's amount (since balance is after trade)
+    const firstTrade = sortedTrades[0];
+    const firstTradeAmount = parseFloat(firstTrade.amount) || 0;
+    const firstTradeBalance = parseFloat(firstTrade.balance) || 0;
+    
+    // If first trade has valid balance, use it to calculate initial
+    let estimatedInitial = 50; // Default
+    if (firstTradeBalance > 0) {
+        estimatedInitial = firstTradeBalance + firstTradeAmount; // Balance after trade + trade amount = balance before
+    } else {
+        // Estimate from current balance and all trade amounts
+        const totalTraded = sortedTrades.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+        estimatedInitial = currentBalance + totalTraded;
+    }
+    
+    const balanceChange = currentBalance - estimatedInitial;
+    const balanceChangePercent = estimatedInitial > 0 ? (balanceChange / estimatedInitial) * 100 : 0;
+    
+    // Total P&L: Calculate from balance changes if P&L is not available
+    // For dry-run mode, P&L might be 0, so calculate from balance progression
+    let totalPnL = trades.reduce((sum, trade) => {
+        const pnl = parseFloat(trade.pnl) || 0;
+        return sum + pnl;
+    }, 0);
+    
+    // If all P&L is 0 (dry-run), calculate from balance change
+    if (totalPnL === 0 && trades.length > 0) {
+        totalPnL = currentBalance - estimatedInitial;
+    }
+    
+    const totalPnLPercent = estimatedInitial > 0 ? (totalPnL / estimatedInitial) * 100 : 0;
     
     // Daily P&L (trades from today)
     const today = new Date().toISOString().split('T')[0];
@@ -494,19 +586,62 @@ function renderTradesTable() {
         return;
     }
     
-    tbody.innerHTML = filteredTrades.map(trade => `
+    // Sort filtered trades by timestamp for proper balance calculation
+    const sortedForDisplay = [...filteredTrades].sort((a, b) => 
+        new Date(a.timestamp) - new Date(b.timestamp)
+    );
+    
+    // Calculate running balance starting from first trade with valid balance
+    let runningBalance = null;
+    const firstValidBalance = sortedForDisplay.find(t => parseFloat(t.balance) > 0);
+    if (firstValidBalance) {
+        // Initial balance = balance after first trade + amount of first trade
+        runningBalance = parseFloat(firstValidBalance.balance) + parseFloat(firstValidBalance.amount || 0);
+    } else if (sortedForDisplay.length > 0) {
+        // If no valid balance, start with estimated initial
+        runningBalance = 50; // Default starting balance
+    }
+    
+    tbody.innerHTML = sortedForDisplay.map((trade, index) => {
+        const amount = parseFloat(trade.amount || 0);
+        const price = parseFloat(trade.price || 0);
+        let pnl = parseFloat(trade.pnl || 0);
+        let balance = parseFloat(trade.balance || 0);
+        
+        // If balance is 0 or missing, calculate it
+        if (balance === 0 && runningBalance !== null) {
+            // For BUY: balance decreases by amount
+            // For SELL: balance increases by amount
+            if (trade.action === 'BUY') {
+                balance = runningBalance - amount;
+            } else if (trade.action === 'SELL') {
+                balance = runningBalance + amount;
+            } else {
+                balance = runningBalance - amount; // Default to BUY behavior
+            }
+            runningBalance = balance;
+        } else if (balance > 0) {
+            runningBalance = balance;
+        }
+        
+        // If P&L is 0 (dry-run), show as "-" or calculate from price movement
+        const pnlDisplay = pnl !== 0 ? formatCurrency(pnl) : '-';
+        const pnlClass = pnl > 0 ? 'pnl-positive' : (pnl < 0 ? 'pnl-negative' : 'pnl-neutral');
+        
+        return `
         <tr>
             <td>${formatTimestamp(trade.timestamp)}</td>
             <td>${truncate(trade.market || 'Unknown', 40)}</td>
             <td class="action-${(trade.action || 'BUY').toLowerCase()}">${trade.action || 'BUY'}</td>
-            <td>$${formatNumber(trade.price || 0)}</td>
-            <td>$${formatCurrency(trade.amount || 0)}</td>
-            <td class="${(trade.pnl || 0) >= 0 ? 'pnl-positive' : 'pnl-negative'}">
-                ${formatCurrency(trade.pnl || 0)}
+            <td>$${formatNumber(price)}</td>
+            <td>$${formatCurrency(amount)}</td>
+            <td class="${pnlClass}">
+                ${pnlDisplay}
             </td>
-            <td>$${formatCurrency(trade.balance || 0)}</td>
+            <td>$${formatCurrency(balance)}</td>
         </tr>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // Update balance chart with period filter
