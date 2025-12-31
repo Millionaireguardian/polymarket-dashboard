@@ -216,13 +216,30 @@ async function loadTrades() {
     showLoading(true);
     
     try {
-        const response = await fetch(CONFIG.tradesFile + '?t=' + Date.now());
+        // Add cache-busting timestamp to prevent browser caching
+        const cacheBuster = '?t=' + Date.now() + '&v=' + Math.random();
+        const response = await fetch(CONFIG.tradesFile + cacheBuster, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+        });
+        
         if (!response.ok) {
-            throw new Error('Failed to load trades');
+            throw new Error(`Failed to load trades: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
         tradesData = Array.isArray(data) ? data : [];
+        
+        // Log for debugging
+        if (tradesData.length > 0) {
+            const lastTrade = tradesData[tradesData.length - 1];
+            console.log(`✅ Loaded ${tradesData.length} trades. Last trade: ${lastTrade.timestamp}`);
+        } else {
+            console.log('ℹ️  No trades found in data file');
+        }
         
         updateStatus(true);
         
@@ -235,7 +252,7 @@ async function loadTrades() {
         
         showLoading(false);
     } catch (error) {
-        console.error('Error loading trades:', error);
+        console.error('❌ Error loading trades:', error);
         updateStatus(false);
         showError('Failed to load trades. Make sure the bot is running and trades.json exists.');
         showLoading(false);
@@ -335,61 +352,51 @@ function calculateSummary() {
         new Date(a.timestamp) - new Date(b.timestamp)
     );
 
-    // Find the last trade with a valid balance
-    let currentBalance = 0;
-    for (let i = sortedTrades.length - 1; i >= 0; i--) {
-        const balance = parseFloat(sortedTrades[i].balance);
-        if (balance > 0) {
-            currentBalance = balance;
-            break;
-        }
-    }
-    
-    // If no valid balance found, calculate from trades
-    if (currentBalance === 0 && sortedTrades.length > 0) {
-        // Start with a reasonable initial balance
-        let runningBalance = 50; // Default starting balance
-        for (const trade of sortedTrades) {
-            const amount = parseFloat(trade.amount || 0);
-            if (trade.action === 'BUY') {
-                runningBalance -= amount;
-            } else if (trade.action === 'SELL') {
-                runningBalance += amount;
-            } else {
-                runningBalance -= amount; // Default to BUY
-            }
-        }
-        currentBalance = runningBalance;
-    }
-    
-    // Calculate initial balance: first trade's balance + first trade's amount (since balance is after trade)
+    // Get initial balance from first trade (if available) or default to 50
     const firstTrade = sortedTrades[0];
-    const firstTradeAmount = parseFloat(firstTrade.amount) || 0;
-    const firstTradeBalance = parseFloat(firstTrade.balance) || 0;
+    const initialBalance = parseFloat(firstTrade?.initialBalance) || 
+                          (firstTrade && parseFloat(firstTrade.balance) > 0 ? 
+                           parseFloat(firstTrade.balance) + parseFloat(firstTrade.amount || 0) : 50);
     
-    // If first trade has valid balance, use it to calculate initial
-    let estimatedInitial = 50; // Default
-    if (firstTradeBalance > 0) {
-        estimatedInitial = firstTradeBalance + firstTradeAmount; // Balance after trade + trade amount = balance before
-    } else {
-        // Estimate from current balance and all trade amounts
-        const totalTraded = sortedTrades.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-        estimatedInitial = currentBalance + totalTraded;
+    // Calculate current balance by working forward from initial balance
+    let currentBalance = initialBalance;
+    for (const trade of sortedTrades) {
+        const amount = parseFloat(trade.amount || 0);
+        if (trade.action === 'BUY') {
+            currentBalance -= amount;
+        } else if (trade.action === 'SELL') {
+            currentBalance += amount;
+        }
+        
+        // If trade has a logged balance, use it (but only if it's reasonable)
+        const loggedBalance = parseFloat(trade.balance);
+        if (loggedBalance > 0 && Math.abs(loggedBalance - currentBalance) < 100) {
+            // Use logged balance if it's close to calculated (within $100)
+            currentBalance = loggedBalance;
+        }
     }
     
-    const balanceChange = currentBalance - estimatedInitial;
-    const balanceChangePercent = estimatedInitial > 0 ? (balanceChange / estimatedInitial) * 100 : 0;
+    // Use the last trade's balance if it's valid and positive
+    const lastTrade = sortedTrades[sortedTrades.length - 1];
+    if (lastTrade) {
+        const lastBalance = parseFloat(lastTrade.balance);
+        if (lastBalance > 0) {
+            currentBalance = lastBalance;
+        }
+    }
     
-    // Total P&L: Calculate from balance changes if P&L is not available
-    // For dry-run mode, P&L might be 0, so calculate from balance progression
+    const balanceChange = currentBalance - initialBalance;
+    const balanceChangePercent = initialBalance > 0 ? (balanceChange / initialBalance) * 100 : 0;
+    
+    // Total P&L: Sum of all P&L values, or calculate from balance change if all P&L is 0
     let totalPnL = trades.reduce((sum, trade) => {
         const pnl = parseFloat(trade.pnl) || 0;
         return sum + pnl;
     }, 0);
     
-    // If all P&L is 0 (dry-run), calculate from balance change
+    // If all P&L is 0 (dry-run), use balance change as P&L
     if (totalPnL === 0 && trades.length > 0) {
-        totalPnL = currentBalance - estimatedInitial;
+        totalPnL = balanceChange;
     }
     
     const totalPnLPercent = estimatedInitial > 0 ? (totalPnL / estimatedInitial) * 100 : 0;
@@ -591,14 +598,25 @@ function renderTradesTable() {
         new Date(a.timestamp) - new Date(b.timestamp)
     );
     
-    // Calculate running balance starting from first trade with valid balance
+    // Get initial balance from first trade (if available) or calculate from all trades
     let runningBalance = null;
-    const firstValidBalance = sortedForDisplay.find(t => parseFloat(t.balance) > 0);
-    if (firstValidBalance) {
-        // Initial balance = balance after first trade + amount of first trade
-        runningBalance = parseFloat(firstValidBalance.balance) + parseFloat(firstValidBalance.amount || 0);
-    } else if (sortedForDisplay.length > 0) {
-        // If no valid balance, start with estimated initial
+    const firstTrade = sortedForDisplay[0];
+    if (firstTrade) {
+        // Check if first trade has initialBalance field
+        if (firstTrade.initialBalance) {
+            runningBalance = parseFloat(firstTrade.initialBalance);
+        } else {
+            // Calculate initial balance: first trade's balance + first trade's amount
+            const firstBalance = parseFloat(firstTrade.balance || 0);
+            const firstAmount = parseFloat(firstTrade.amount || 0);
+            if (firstBalance > 0) {
+                runningBalance = firstBalance + firstAmount;
+            } else {
+                // Fallback: use default or calculate from all trades
+                runningBalance = 50; // Default
+            }
+        }
+    } else {
         runningBalance = 50; // Default starting balance
     }
     
@@ -608,8 +626,8 @@ function renderTradesTable() {
         let pnl = parseFloat(trade.pnl || 0);
         let balance = parseFloat(trade.balance || 0);
         
-        // If balance is 0 or missing, calculate it
-        if (balance === 0 && runningBalance !== null) {
+        // Calculate balance if missing or invalid
+        if (balance <= 0 || isNaN(balance)) {
             // For BUY: balance decreases by amount
             // For SELL: balance increases by amount
             if (trade.action === 'BUY') {
@@ -619,10 +637,10 @@ function renderTradesTable() {
             } else {
                 balance = runningBalance - amount; // Default to BUY behavior
             }
-            runningBalance = balance;
-        } else if (balance > 0) {
-            runningBalance = balance;
         }
+        
+        // Update running balance for next iteration
+        runningBalance = balance;
         
         // If P&L is 0 (dry-run), show as "-" or calculate from price movement
         const pnlDisplay = pnl !== 0 ? formatCurrency(pnl) : '-';
