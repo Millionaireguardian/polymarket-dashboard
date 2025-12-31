@@ -69,25 +69,41 @@ if git fetch "$REMOTE_URL" main 2>/dev/null; then
         if git merge-base --is-ancestor "$LOCAL" "$REMOTE" 2>/dev/null; then
             echo "⚠️  Remote has new commits. Pulling and merging..."
             # Pull with token to avoid credential issues
-            if git pull "$REMOTE_URL" main --no-edit; then
+            if git pull "$REMOTE_URL" main --no-edit 2>/dev/null; then
                 echo "✅ Successfully pulled and merged remote changes"
             else
-                echo "⚠️  Merge conflict or pull failed. Attempting to pull with merge strategy..."
-                git pull "$REMOTE_URL" main --no-rebase --no-edit || {
-                    echo "❌ Could not automatically merge. Please resolve conflicts manually."
-                    echo "   You can try: git pull $REMOTE_URL main"
-                    exit 1
-                }
+                echo "⚠️  Merge conflict or pull failed. Attempting with allow-unrelated-histories..."
+                # Try with allow-unrelated-histories for unrelated histories
+                if git pull "$REMOTE_URL" main --allow-unrelated-histories --no-edit; then
+                    echo "✅ Successfully merged unrelated histories"
+                else
+                    echo "⚠️  Still failed. Attempting with no-edit flag..."
+                    git pull "$REMOTE_URL" main --allow-unrelated-histories --no-rebase || {
+                        echo "❌ Could not automatically merge. Please resolve conflicts manually."
+                        echo "   You can try: git pull $REMOTE_URL main --allow-unrelated-histories"
+                        exit 1
+                    }
+                fi
             fi
         else
             echo "⚠️  Local and remote have diverged. Attempting to merge..."
-            if git pull "$REMOTE_URL" main --no-rebase --no-edit; then
+            # Try normal merge first
+            if git pull "$REMOTE_URL" main --no-rebase --no-edit 2>/dev/null; then
                 echo "✅ Successfully merged remote changes"
+            # If that fails due to unrelated histories, allow it
+            elif git pull "$REMOTE_URL" main --no-rebase --no-edit --allow-unrelated-histories; then
+                echo "✅ Successfully merged unrelated histories"
             else
-                echo "❌ Could not automatically merge diverged branches."
-                echo "   You may need to resolve conflicts manually or use:"
-                echo "   git pull $REMOTE_URL main --rebase"
-                exit 1
+                echo "⚠️  Merge failed. Attempting with allow-unrelated-histories..."
+                # Try with allow-unrelated-histories explicitly
+                if git pull "$REMOTE_URL" main --allow-unrelated-histories --no-edit; then
+                    echo "✅ Successfully merged unrelated histories"
+                else
+                    echo "❌ Could not automatically merge diverged branches."
+                    echo "   You may need to resolve conflicts manually or use:"
+                    echo "   git pull $REMOTE_URL main --allow-unrelated-histories"
+                    exit 1
+                fi
             fi
         fi
     else
