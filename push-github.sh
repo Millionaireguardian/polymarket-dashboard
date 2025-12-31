@@ -128,10 +128,15 @@ fi
 # Push with token (using full URL to bypass credential cache)
 echo ""
 echo "Pushing to GitHub..."
+
+# Configure git to not prompt for credentials
+export GIT_TERMINAL_PROMPT=0
+git config --global credential.helper store
+
 # REMOTE_URL already defined above with token - using it here
 # This ensures we use the token, not cached credentials for imgprotocoldev
 
-if git push "$REMOTE_URL" main; then
+if git push "$REMOTE_URL" main 2>&1; then
     echo ""
     echo "✅ Successfully pushed to GitHub!"
     echo ""
