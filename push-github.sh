@@ -7,16 +7,29 @@ cd "$(dirname "$0")"
 # Load token from .bashrc if not already set
 if [ -z "$GITHUB_TOKEN" ]; then
     if [ -f ~/.bashrc ]; then
-        source ~/.bashrc
+        # Extract token directly from bashrc (more reliable than sourcing)
+        TOKEN_LINE=$(grep "^export GITHUB_TOKEN=" ~/.bashrc | head -1)
+        if [ -n "$TOKEN_LINE" ]; then
+            # Extract token value (handles quotes and spaces)
+            GITHUB_TOKEN=$(echo "$TOKEN_LINE" | sed 's/^export GITHUB_TOKEN=//' | sed 's/^["'\'']//' | sed 's/["'\'']$//' | xargs)
+            export GITHUB_TOKEN
+        fi
     fi
 fi
 
-# If still not set, use default token or run setup
+# If still not set, use default token
 if [ -z "$GITHUB_TOKEN" ]; then
     # Default token (fallback)
     DEFAULT_TOKEN="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"
     export GITHUB_TOKEN="$DEFAULT_TOKEN"
     echo "⚠️  Using default token. Run 'bash update-token.sh' to update permanently."
+fi
+
+# Debug: Show token status (first 10 chars only)
+if [ -n "$GITHUB_TOKEN" ]; then
+    echo "Using token: ${GITHUB_TOKEN:0:10}..."
+else
+    echo "⚠️  No token found!"
 fi
 
 # Ensure git user is configured
@@ -131,15 +144,30 @@ echo "Pushing to GitHub..."
 
 # Test token first
 echo "Verifying token..."
-if ! curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user | grep -q '"login"'; then
-    echo "❌ Token is invalid or expired!"
+TOKEN_TEST=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
+if echo "$TOKEN_TEST" | grep -q '"login"'; then
+    username=$(echo "$TOKEN_TEST" | grep '"login"' | head -1 | sed 's/.*"login": "\([^"]*\)".*/\1/')
+    echo "✅ Token verified (authenticated as: $username)"
+else
+    echo "❌ Token verification failed!"
+    echo "Response: $TOKEN_TEST"
     echo ""
-    echo "Please:"
-    echo "1. Check token at: https://github.com/settings/tokens"
-    echo "2. Verify it has 'repo' permissions"
-    echo "3. Create a new token if needed"
-    echo "4. Update ~/.bashrc with: export GITHUB_TOKEN=new_token"
-    exit 1
+    echo "Trying to reload token from ~/.bashrc..."
+    if [ -f ~/.bashrc ]; then
+        source ~/.bashrc
+        # Try again
+        TOKEN_TEST=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
+        if echo "$TOKEN_TEST" | grep -q '"login"'; then
+            echo "✅ Token verified after reload"
+        else
+            echo "❌ Token is still invalid!"
+            echo "Please run: bash update-token.sh"
+            exit 1
+        fi
+    else
+        echo "Please run: bash update-token.sh"
+        exit 1
+    fi
 fi
 
 # Use git credential helper to store token temporarily
