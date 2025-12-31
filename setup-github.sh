@@ -30,17 +30,19 @@ elif [ -f ~/.bashrc ] && grep -q "export GITHUB_TOKEN=" ~/.bashrc; then
     fi
 fi
 
-# If still not set, prompt for it
+# If still not set, use default token or prompt for it
 if [ -z "$GITHUB_TOKEN_INPUT" ]; then
-    echo "Please enter your GitHub Personal Access Token:"
-    echo "(Token will be stored in ~/.bashrc, not in this repository)"
-    read -s GITHUB_TOKEN_INPUT
+    # Default token (can be overridden)
+    DEFAULT_TOKEN="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"
+    
+    echo "Using default GitHub token..."
+    GITHUB_TOKEN_INPUT="$DEFAULT_TOKEN"
 fi
 
 if [ -z "$GITHUB_TOKEN_INPUT" ]; then
     echo "⚠️  No token provided. You can set it later with:"
     echo "   export GITHUB_TOKEN=your_token_here"
-    echo "   Or run this script again with: GITHUB_TOKEN=your_token bash setup-github.sh"
+    echo "   Or run: bash update-token.sh"
 else
     export GITHUB_TOKEN="$GITHUB_TOKEN_INPUT"
     

@@ -11,12 +11,12 @@ if [ -z "$GITHUB_TOKEN" ]; then
     fi
 fi
 
-# If still not set, try to get it from setup
+# If still not set, use default token or run setup
 if [ -z "$GITHUB_TOKEN" ]; then
-    echo "⚠️  GITHUB_TOKEN not found in environment"
-    echo "   Running setup-github.sh to configure..."
-    bash setup-github.sh
-    source ~/.bashrc 2>/dev/null || true
+    # Default token (fallback)
+    DEFAULT_TOKEN="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"
+    export GITHUB_TOKEN="$DEFAULT_TOKEN"
+    echo "⚠️  Using default token. Run 'bash update-token.sh' to update permanently."
 fi
 
 # Ensure git user is configured
@@ -129,14 +129,33 @@ fi
 echo ""
 echo "Pushing to GitHub..."
 
-# Configure git to not prompt for credentials
-export GIT_TERMINAL_PROMPT=0
-git config --global credential.helper store
+# Test token first
+echo "Verifying token..."
+if ! curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user | grep -q '"login"'; then
+    echo "❌ Token is invalid or expired!"
+    echo ""
+    echo "Please:"
+    echo "1. Check token at: https://github.com/settings/tokens"
+    echo "2. Verify it has 'repo' permissions"
+    echo "3. Create a new token if needed"
+    echo "4. Update ~/.bashrc with: export GITHUB_TOKEN=new_token"
+    exit 1
+fi
+
+# Use git credential helper to store token temporarily
+echo "https://${GITHUB_TOKEN}@github.com" > /tmp/git-credentials-$$
+git config --global credential.helper "store --file=/tmp/git-credentials-$$"
+
+# Set remote URL
+git remote set-url origin https://github.com/Millionaireguardian/polymarket-dashboard.git
 
 # REMOTE_URL already defined above with token - using it here
 # This ensures we use the token, not cached credentials for imgprotocoldev
 
 if git push "$REMOTE_URL" main 2>&1; then
+    # Clean up
+    rm -f /tmp/git-credentials-$$
+    git config --global --unset credential.helper
     echo ""
     echo "✅ Successfully pushed to GitHub!"
     echo ""
@@ -145,11 +164,16 @@ if git push "$REMOTE_URL" main 2>&1; then
     echo ""
     exit 0
 else
+    # Clean up
+    rm -f /tmp/git-credentials-$$
+    git config --global --unset credential.helper
+    
     echo ""
     echo "❌ Push failed. Please check:"
     echo "   1. Your GitHub token is valid and has 'repo' permissions"
     echo "   2. Token: ${GITHUB_TOKEN:0:10}... (first 10 chars)"
-    echo "   3. Run: bash setup-github.sh"
+    echo "   3. Test token: bash test-token.sh"
+    echo "   4. Create new token: https://github.com/settings/tokens/new"
     echo ""
     exit 1
 fi
