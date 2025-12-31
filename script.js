@@ -688,26 +688,26 @@ function renderTradesTable() {
         return;
     }
     
-    // Sort filtered trades by timestamp for proper balance calculation
-    const sortedForDisplay = [...filteredTrades].sort((a, b) => 
+    // First, sort ALL trades chronologically to calculate balances correctly
+    const allTradesChronological = [...tradesData].sort((a, b) => 
         new Date(a.timestamp) - new Date(b.timestamp)
     );
     
-    // Get initial balance from first trade (if available) or calculate from all trades
+    // Calculate balances for all trades chronologically
+    const tradesWithBalance = new Map();
     let runningBalance = null;
-    const firstTrade = sortedForDisplay[0];
-    if (firstTrade) {
-        // Check if first trade has initialBalance field
-        if (firstTrade.initialBalance) {
-            runningBalance = parseFloat(firstTrade.initialBalance);
+    
+    // Get initial balance from first trade chronologically
+    const firstTradeChronological = allTradesChronological[0];
+    if (firstTradeChronological) {
+        if (firstTradeChronological.initialBalance) {
+            runningBalance = parseFloat(firstTradeChronological.initialBalance);
         } else {
-            // Calculate initial balance: first trade's balance + first trade's amount
-            const firstBalance = parseFloat(firstTrade.balance || 0);
-            const firstAmount = parseFloat(firstTrade.amount || 0);
+            const firstBalance = parseFloat(firstTradeChronological.balance || 0);
+            const firstAmount = parseFloat(firstTradeChronological.amount || 0);
             if (firstBalance > 0) {
                 runningBalance = firstBalance + firstAmount;
             } else {
-                // Fallback: use default or calculate from all trades
                 runningBalance = 50; // Default
             }
         }
@@ -715,27 +715,43 @@ function renderTradesTable() {
         runningBalance = 50; // Default starting balance
     }
     
-    tbody.innerHTML = sortedForDisplay.map((trade, index) => {
+    // Calculate balance for each trade chronologically
+    for (const trade of allTradesChronological) {
         const amount = parseFloat(trade.amount || 0);
-        const price = parseFloat(trade.price || 0);
-        let pnl = parseFloat(trade.pnl || 0);
         let balance = parseFloat(trade.balance || 0);
         
         // Calculate balance if missing or invalid
         if (balance <= 0 || isNaN(balance)) {
-            // For BUY: balance decreases by amount
-            // For SELL: balance increases by amount
             if (trade.action === 'BUY') {
                 balance = runningBalance - amount;
             } else if (trade.action === 'SELL') {
                 balance = runningBalance + amount;
             } else {
-                balance = runningBalance - amount; // Default to BUY behavior
+                balance = runningBalance - amount;
             }
         }
         
-        // Update running balance for next iteration
         runningBalance = balance;
+        // Store calculated balance with trade timestamp as key
+        tradesWithBalance.set(trade.timestamp, balance);
+    }
+    
+    // Now render filtered trades in the user's preferred sort order
+    // (filteredTrades is already sorted by filterAndRenderTrades)
+    tbody.innerHTML = filteredTrades.map((trade, index) => {
+        const amount = parseFloat(trade.amount || 0);
+        const price = parseFloat(trade.price || 0);
+        let pnl = parseFloat(trade.pnl || 0);
+        
+        // Get balance from pre-calculated map (calculated chronologically)
+        let balance = tradesWithBalance.get(trade.timestamp);
+        if (!balance || balance <= 0 || isNaN(balance)) {
+            // Fallback: use trade's logged balance if available
+            balance = parseFloat(trade.balance || 0);
+            if (balance <= 0 || isNaN(balance)) {
+                balance = 0; // Last resort
+            }
+        }
         
         // If P&L is 0 (dry-run), show as "-" or calculate from price movement
         const pnlDisplay = pnl !== 0 ? formatCurrency(pnl) : '-';
