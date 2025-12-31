@@ -7,7 +7,7 @@
 const CONFIG = {
     // Try multiple possible paths for trades.json
     tradesFile: './data/trades.json',
-    updateInterval: 30000, // 30 seconds
+    updateInterval: 10000, // 10 seconds - more frequent updates
 };
 
 // Helper to try multiple file paths
@@ -54,10 +54,16 @@ let searchQuery = '';
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Dashboard initializing...');
     initializeCharts();
     setupEventListeners();
     loadTrades();
-    setInterval(loadTrades, CONFIG.updateInterval);
+    // Set up auto-refresh with more frequent updates
+    setInterval(() => {
+        console.log(`🔄 Auto-refreshing data (every ${CONFIG.updateInterval/1000}s)...`);
+        loadTrades();
+    }, CONFIG.updateInterval);
+    console.log(`✅ Dashboard initialized. Auto-refresh every ${CONFIG.updateInterval/1000} seconds.`);
 });
 
 // Setup event listeners
@@ -311,13 +317,25 @@ async function loadTrades() {
         tradesData = Array.isArray(data) ? data : [];
         
         // Log for debugging
-        if (tradesData.length > 0) {
-            const lastTrade = tradesData[tradesData.length - 1];
-            console.log(`✅ Loaded ${tradesData.length} trades. Last trade: ${lastTrade.timestamp}`);
-            console.log(`   Latest balance: $${parseFloat(lastTrade.balance || 0).toFixed(2)}`);
+        const previousTradeCount = tradesData.length;
+        const newTradeCount = Array.isArray(data) ? data.length : 0;
+        
+        if (newTradeCount > 0) {
+            const lastTrade = data[data.length - 1];
+            const lastBalance = parseFloat(lastTrade.balance || 0);
+            console.log(`✅ Loaded ${newTradeCount} trades (was ${previousTradeCount}). Last trade: ${lastTrade.timestamp}`);
+            console.log(`   Latest balance: $${lastBalance.toFixed(2)}`);
+            
+            // Check if new trades were added
+            if (newTradeCount > previousTradeCount) {
+                console.log(`🆕 ${newTradeCount - previousTradeCount} new trade(s) detected!`);
+            }
         } else {
             console.log('ℹ️  No trades found in data file (empty array)');
         }
+        
+        // Update tradesData
+        tradesData = Array.isArray(data) ? data : [];
         
         updateStatus(true);
         
@@ -326,10 +344,12 @@ async function loadTrades() {
             renderEmptyState();
         } else {
             // Force full refresh of all components
+            console.log('🔄 Refreshing dashboard with latest data...');
             calculateSummary();
             filterAndRenderTrades();
             updateChart('all');
             updateWinRateChart();
+            console.log('✅ Dashboard refreshed');
         }
         
         showLoading(false);
