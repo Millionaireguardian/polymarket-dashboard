@@ -4777,5 +4777,167 @@
     "amount": 2,
     "pnl": 0,
     "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:21.332Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.285572423461133,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:24.041Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2855612801832773,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:25.918Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28505939680805176,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:27.732Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28561161591901696,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:29.500Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28534292047081944,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:32.373Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2854037591272326,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:34.606Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28510023235524395,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:36.292Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28551005927652306,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:37.882Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2853653739523851,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:40.717Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28513159503371716,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:42.449Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28559476418412655,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:44.284Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28533738507470247,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:46.069Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.2853631183919216,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:47.754Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28505445750582625,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:49.535Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.285366469217544,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:51.508Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28541509997853054,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:53.229Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28536568630065484,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2025-12-30T17:09:54.820Z",
+    "market": "Russia x Ukraine ceasefire in 2025?",
+    "action": "BUY",
+    "price": 0.28546929024890594,
+    "amount": 2,
+    "pnl": 0,
+    "balance": 0
   }
 ]
