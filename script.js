@@ -5,9 +5,43 @@
 
 // Dashboard Configuration
 const CONFIG = {
+    // Try multiple possible paths for trades.json
     tradesFile: './data/trades.json',
     updateInterval: 30000, // 30 seconds
 };
+
+// Helper to try multiple file paths
+async function tryLoadTradesFile() {
+    const possiblePaths = [
+        './data/trades.json',
+        'data/trades.json',
+        '/data/trades.json',
+        '../data/trades.json'
+    ];
+    
+    for (const filePath of possiblePaths) {
+        try {
+            const cacheBuster = '?t=' + Date.now() + '&v=' + Math.random();
+            const response = await fetch(filePath + cacheBuster, {
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            });
+            
+            if (response.ok) {
+                console.log(`✅ Found trades file at: ${filePath}`);
+                return { response, filePath };
+            }
+        } catch (e) {
+            // Try next path
+            continue;
+        }
+    }
+    
+    return null;
+}
 
 // Global state
 let balanceChart = null;
@@ -216,21 +250,64 @@ async function loadTrades() {
     showLoading(true);
     
     try {
-        // Add cache-busting timestamp to prevent browser caching
-        const cacheBuster = '?t=' + Date.now() + '&v=' + Math.random();
-        const response = await fetch(CONFIG.tradesFile + cacheBuster, {
-            cache: 'no-store',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-            }
-        });
+        // Try to find the trades file in multiple possible locations
+        const result = await tryLoadTradesFile();
         
-        if (!response.ok) {
-            throw new Error(`Failed to load trades: ${response.status} ${response.statusText}`);
+        if (!result) {
+            // File not found in any location
+            console.log('ℹ️  trades.json not found in any expected location');
+            tradesData = [];
+            renderEmptyState();
+            updateStatus(false);
+            showError('No trades file found. If running locally, make sure the bot is running and has logged at least one trade. If using GitHub Pages, make sure trades.json is pushed to the repository.');
+            showLoading(false);
+            return;
         }
         
-        const data = await response.json();
+        const { response, filePath } = result;
+        console.log(`📡 Fetching trades from: ${filePath}`);
+        
+        if (!response.ok) {
+            // More detailed error message
+            const errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+            console.error(`❌ Fetch failed: ${errorMsg}`);
+            console.error(`   File path: ${filePath}`);
+            
+            // If 404, the file doesn't exist yet (bot hasn't logged any trades)
+            if (response.status === 404) {
+                console.log('ℹ️  trades.json not found - bot may not have logged any trades yet');
+                tradesData = [];
+                renderEmptyState();
+                updateStatus(false);
+                showError('No trades file found. The bot will create it when it executes its first trade.');
+                showLoading(false);
+                return;
+            }
+            
+            throw new Error(errorMsg);
+        }
+        
+        const text = await response.text();
+        
+        // Handle empty file
+        if (!text || text.trim() === '') {
+            console.log('ℹ️  trades.json is empty - no trades logged yet');
+            tradesData = [];
+            renderEmptyState();
+            updateStatus(false);
+            showLoading(false);
+            return;
+        }
+        
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error('❌ JSON parse error:', parseError);
+            console.error('   File content (first 200 chars):', text.substring(0, 200));
+            throw new Error('Invalid JSON in trades.json file');
+        }
+        
         tradesData = Array.isArray(data) ? data : [];
         
         // Log for debugging
@@ -238,7 +315,7 @@ async function loadTrades() {
             const lastTrade = tradesData[tradesData.length - 1];
             console.log(`✅ Loaded ${tradesData.length} trades. Last trade: ${lastTrade.timestamp}`);
         } else {
-            console.log('ℹ️  No trades found in data file');
+            console.log('ℹ️  No trades found in data file (empty array)');
         }
         
         updateStatus(true);
@@ -253,8 +330,26 @@ async function loadTrades() {
         showLoading(false);
     } catch (error) {
         console.error('❌ Error loading trades:', error);
+        console.error('   Error details:', {
+            message: error.message,
+            stack: error.stack,
+            file: CONFIG.tradesFile
+        });
         updateStatus(false);
-        showError('Failed to load trades. Make sure the bot is running and trades.json exists.');
+        
+        // More helpful error message
+        let errorMessage = 'Failed to load trades. ';
+        if (error.message.includes('404') || error.message.includes('not found')) {
+            errorMessage += 'The trades.json file does not exist yet. The bot will create it when it executes its first trade.';
+        } else if (error.message.includes('JSON')) {
+            errorMessage += 'The trades.json file contains invalid JSON. Please check the file.';
+        } else if (error.message.includes('CORS')) {
+            errorMessage += 'CORS error - make sure the dashboard is being served with CORS enabled.';
+        } else {
+            errorMessage += `Error: ${error.message}. Make sure the bot is running and trades.json exists.`;
+        }
+        
+        showError(errorMessage);
         showLoading(false);
     }
 }
