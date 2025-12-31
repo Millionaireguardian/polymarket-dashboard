@@ -72,10 +72,43 @@ bash setup-github.sh
 source ~/.bashrc
 ```
 
-### Push fails
+### Push fails with "Permission denied" or wrong user
+If you see errors like "Permission denied to imgprotocoldev" or other users, git is using cached credentials. Fix it:
+
+```bash
+# Clear git credential cache
+bash clear-git-creds.sh
+
+# Then try pushing again
+bash push-github.sh
+```
+
+The updated `push-github.sh` script now:
+- Automatically pulls remote changes before pushing
+- Uses the token URL directly to bypass credential cache
+- Handles merge conflicts gracefully
+
+### Remote has changes (need to pull first)
+The script now automatically handles this! It will:
+1. Fetch remote changes
+2. Detect if local is behind
+3. Pull and merge automatically
+4. Then push your changes
+
+If you still get merge conflicts, resolve them manually:
+```bash
+git pull https://${GITHUB_TOKEN}@github.com/Millionaireguardian/polymarket-dashboard.git main
+# Resolve conflicts, then:
+git add .
+git commit -m "Merge remote changes"
+bash push-github.sh
+```
+
+### Push fails - other issues
 1. Verify your token has `repo` permissions
 2. Check token is valid at: https://github.com/settings/tokens
 3. Ensure you're in the correct directory: `polymarket-trading-bot/public`
+4. Clear credential cache: `bash clear-git-creds.sh`
 
 ### Git user not configured
 Run:
