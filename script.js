@@ -494,7 +494,7 @@ function calculateSummary() {
         totalPnL = balanceChange;
     }
     
-    const totalPnLPercent = estimatedInitial > 0 ? (totalPnL / estimatedInitial) * 100 : 0;
+    const totalPnLPercent = initialBalance > 0 ? (totalPnL / initialBalance) * 100 : 0;
     
     // Daily P&L (trades from today)
     const today = new Date().toISOString().split('T')[0];
