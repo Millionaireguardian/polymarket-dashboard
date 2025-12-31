@@ -45,7 +45,11 @@ echo ""
 
 # Step 5: Set up remote with token (temporarily, not in files)
 echo "Step 5: Setting up remote with token (from environment)..."
-GITHUB_TOKEN="${GITHUB_TOKEN:-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}"
+if [ -z "$GITHUB_TOKEN" ]; then
+    echo "❌ Error: GITHUB_TOKEN environment variable not set"
+    echo "   Please set it: export GITHUB_TOKEN=your_token"
+    exit 1
+fi
 
 git remote remove origin 2>/dev/null || true
 git remote add origin "https://${GITHUB_TOKEN}@github.com/Millionaireguardian/polymarket-dashboard.git"

@@ -28,6 +28,10 @@ fi
 echo ""
 echo "Now use the token via environment variable:"
 echo ""
-echo "  GITHUB_TOKEN=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 bash push-with-token.sh"
+echo "  export GITHUB_TOKEN=your_token_here"
+echo "  bash push-with-token.sh"
+echo ""
+echo "Or use the setup script:"
+echo "  bash setup-github.sh"
 echo ""
 
