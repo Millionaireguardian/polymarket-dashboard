@@ -1,7 +1,7 @@
 # GitHub Token Setup - Permanent Configuration
 
 ## Current Token
-**Token**: `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`
+**Token**: Stored in `~/.bashrc` (not in repository files for security)
 
 This token is now configured permanently in:
 - `~/.bashrc` (loaded automatically)

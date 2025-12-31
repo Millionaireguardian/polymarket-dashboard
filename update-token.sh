@@ -3,7 +3,18 @@
 
 cd "$(dirname "$0")"
 
-NEW_TOKEN="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"
+# Get token from environment or prompt
+if [ -z "$1" ]; then
+    if [ -n "$GITHUB_TOKEN" ]; then
+        NEW_TOKEN="$GITHUB_TOKEN"
+    else
+        echo "Please provide token: bash update-token.sh YOUR_TOKEN"
+        echo "Or set: export GITHUB_TOKEN=your_token && bash update-token.sh"
+        exit 1
+    fi
+else
+    NEW_TOKEN="$1"
+fi
 
 echo "🔧 Updating GitHub Personal Access Token..."
 echo ""

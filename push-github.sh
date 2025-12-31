@@ -1,35 +1,38 @@
 #!/bin/bash
 # Convenient script to push dashboard updates to GitHub
-# Uses the configured GitHub token from environment
+# Uses SSH authentication (preferred) or token as fallback
 
 cd "$(dirname "$0")"
 
-# Load token from .bashrc if not already set
-if [ -z "$GITHUB_TOKEN" ]; then
-    if [ -f ~/.bashrc ]; then
-        # Extract token directly from bashrc (more reliable than sourcing)
-        TOKEN_LINE=$(grep "^export GITHUB_TOKEN=" ~/.bashrc | head -1)
-        if [ -n "$TOKEN_LINE" ]; then
-            # Extract token value (handles quotes and spaces)
-            GITHUB_TOKEN=$(echo "$TOKEN_LINE" | sed 's/^export GITHUB_TOKEN=//' | sed 's/^["'\'']//' | sed 's/["'\'']$//' | xargs)
-            export GITHUB_TOKEN
+# Check if remote is using SSH (preferred method)
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
+if [[ "$REMOTE_URL" == *"git@github.com"* ]] || [[ -z "$REMOTE_URL" ]]; then
+    # Use SSH method (no tokens needed)
+    echo "Using SSH authentication (no tokens needed)"
+    # Ensure SSH remote is set
+    if [[ -z "$REMOTE_URL" ]] || [[ "$REMOTE_URL" != *"git@github.com"* ]]; then
+        git remote set-url origin git@github.com:Millionaireguardian/polymarket-dashboard.git 2>/dev/null || true
+    fi
+    USE_SSH=true
+else
+    # Fallback to token method
+    USE_SSH=false
+    # Load token from .bashrc if not already set
+    if [ -z "$GITHUB_TOKEN" ]; then
+        if [ -f ~/.bashrc ]; then
+            TOKEN_LINE=$(grep "^export GITHUB_TOKEN=" ~/.bashrc | head -1)
+            if [ -n "$TOKEN_LINE" ]; then
+                GITHUB_TOKEN=$(echo "$TOKEN_LINE" | sed 's/^export GITHUB_TOKEN=//' | sed 's/^["'\'']//' | sed 's/["'\'']$//' | xargs)
+                export GITHUB_TOKEN
+            fi
         fi
     fi
-fi
-
-# If still not set, use default token
-if [ -z "$GITHUB_TOKEN" ]; then
-    # Default token (fallback)
-    DEFAULT_TOKEN="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"
-    export GITHUB_TOKEN="$DEFAULT_TOKEN"
-    echo "⚠️  Using default token. Run 'bash update-token.sh' to update permanently."
-fi
-
-# Debug: Show token status (first 10 chars only)
-if [ -n "$GITHUB_TOKEN" ]; then
-    echo "Using token: ${GITHUB_TOKEN:0:10}..."
-else
-    echo "⚠️  No token found!"
+    if [ -z "$GITHUB_TOKEN" ]; then
+        echo "⚠️  No SSH key and no token found!"
+        echo "   Recommended: Run 'bash setup-ssh-auth.sh' for permanent setup"
+        echo "   Or: export GITHUB_TOKEN=your_token"
+        exit 1
+    fi
 fi
 
 # Ensure git user is configured
@@ -138,71 +141,49 @@ else
     echo "⚠️  Could not fetch from remote (this is OK if repo is new)"
 fi
 
-# Push with token (using full URL to bypass credential cache)
+# Push to GitHub
 echo ""
 echo "Pushing to GitHub..."
 
-# Test token first
-echo "Verifying token..."
-TOKEN_TEST=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
-if echo "$TOKEN_TEST" | grep -q '"login"'; then
-    username=$(echo "$TOKEN_TEST" | grep '"login"' | head -1 | sed 's/.*"login": "\([^"]*\)".*/\1/')
-    echo "✅ Token verified (authenticated as: $username)"
-else
-    echo "❌ Token verification failed!"
-    echo "Response: $TOKEN_TEST"
-    echo ""
-    echo "Trying to reload token from ~/.bashrc..."
-    if [ -f ~/.bashrc ]; then
-        source ~/.bashrc
-        # Try again
-        TOKEN_TEST=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
-        if echo "$TOKEN_TEST" | grep -q '"login"'; then
-            echo "✅ Token verified after reload"
-        else
-            echo "❌ Token is still invalid!"
-            echo "Please run: bash update-token.sh"
-            exit 1
-        fi
+if [ "$USE_SSH" = true ]; then
+    # Push using SSH (no tokens needed)
+    if git push origin main; then
+        echo ""
+        echo "✅ Successfully pushed to GitHub!"
+        echo ""
+        echo "🌐 Dashboard available at:"
+        echo "   https://Millionaireguardian.github.io/polymarket-dashboard/"
+        echo ""
+        exit 0
     else
-        echo "Please run: bash update-token.sh"
+        echo ""
+        echo "❌ Push failed via SSH."
+        echo "   Run: bash setup-ssh-auth.sh"
         exit 1
     fi
-fi
-
-# Use git credential helper to store token temporarily
-echo "https://${GITHUB_TOKEN}@github.com" > /tmp/git-credentials-$$
-git config --global credential.helper "store --file=/tmp/git-credentials-$$"
-
-# Set remote URL
-git remote set-url origin https://github.com/Millionaireguardian/polymarket-dashboard.git
-
-# REMOTE_URL already defined above with token - using it here
-# This ensures we use the token, not cached credentials for imgprotocoldev
-
-if git push "$REMOTE_URL" main 2>&1; then
-    # Clean up
-    rm -f /tmp/git-credentials-$$
-    git config --global --unset credential.helper
-    echo ""
-    echo "✅ Successfully pushed to GitHub!"
-    echo ""
-    echo "🌐 Dashboard available at:"
-    echo "   https://Millionaireguardian.github.io/polymarket-dashboard/"
-    echo ""
-    exit 0
 else
-    # Clean up
-    rm -f /tmp/git-credentials-$$
-    git config --global --unset credential.helper
+    # Fallback: Push using token
+    echo "Using token authentication (consider switching to SSH)"
+    TOKEN_TEST=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
+    if ! echo "$TOKEN_TEST" | grep -q '"login"'; then
+        echo "❌ Token invalid. Switch to SSH: bash setup-ssh-auth.sh"
+        exit 1
+    fi
     
-    echo ""
-    echo "❌ Push failed. Please check:"
-    echo "   1. Your GitHub token is valid and has 'repo' permissions"
-    echo "   2. Token: ${GITHUB_TOKEN:0:10}... (first 10 chars)"
-    echo "   3. Test token: bash test-token.sh"
-    echo "   4. Create new token: https://github.com/settings/tokens/new"
-    echo ""
-    exit 1
+    REMOTE_URL="https://${GITHUB_TOKEN}@github.com/Millionaireguardian/polymarket-dashboard.git"
+    if git push "$REMOTE_URL" main; then
+        echo ""
+        echo "✅ Successfully pushed to GitHub!"
+        echo ""
+        echo "🌐 Dashboard available at:"
+        echo "   https://Millionaireguardian.github.io/polymarket-dashboard/"
+        echo ""
+        echo "💡 Tip: Run 'bash setup-ssh-auth.sh' for permanent SSH setup (no tokens needed)"
+        exit 0
+    else
+        echo ""
+        echo "❌ Push failed. Switch to SSH: bash setup-ssh-auth.sh"
+        exit 1
+    fi
 fi
 
