@@ -157,8 +157,15 @@ if [ "$USE_SSH" = true ]; then
         exit 0
     else
         echo ""
-        echo "❌ Push failed via SSH."
-        echo "   Run: bash setup-ssh-auth.sh"
+        echo "❌ Push failed - GitHub blocking due to old commits with tokens"
+        echo ""
+        echo "📋 ONE-TIME FIX:"
+        echo "   1. Allow the secret (one click):"
+        echo "      https://github.com/Millionaireguardian/polymarket-dashboard/security/secret-scanning/unblock-secret/37bTMnK3kyMeZxXGJXeBZQmfwO5"
+        echo ""
+        echo "   2. Then push again: bash push-github.sh"
+        echo ""
+        echo "   After allowing once, future pushes will work (tokens removed from code)"
         exit 1
     fi
 else

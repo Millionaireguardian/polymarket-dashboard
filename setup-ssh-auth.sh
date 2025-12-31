@@ -8,7 +8,7 @@ echo ""
 
 # Check if SSH key exists
 if [ ! -f ~/.ssh/id_ed25519 ] && [ ! -f ~/.ssh/id_rsa ]; then
-    echo "Creating new SSH key..."
+    echo "No SSH key found. Creating new one..."
     echo ""
     echo "Press Enter to use default location (~/.ssh/id_ed25519)"
     echo "Or specify a custom path"
@@ -30,7 +30,7 @@ if [ ! -f ~/.ssh/id_ed25519 ] && [ ! -f ~/.ssh/id_rsa ]; then
         exit 1
     fi
 else
-    echo "✅ SSH key already exists"
+    echo "✅ Using existing SSH key (already configured for GitHub)"
     if [ -f ~/.ssh/id_ed25519.pub ]; then
         key_path=~/.ssh/id_ed25519.pub
     else
@@ -38,37 +38,55 @@ else
     fi
 fi
 
-# Display public key
+# Test if key is already on GitHub
 echo ""
-echo "📋 Your public SSH key:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-cat "${key_path%.*}.pub"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+echo "Testing if SSH key is already configured on GitHub..."
+SSH_TEST=$(ssh -T git@github.com 2>&1)
+
+if echo "$SSH_TEST" | grep -q "successfully authenticated" || echo "$SSH_TEST" | grep -q "Hi Millionaireguardian"; then
+    echo "✅ Your existing SSH key is already working with GitHub!"
+    echo "   No need to add it again - it's already configured."
+    SKIP_KEY_ADD=true
+else
+    echo "⚠️  Key not yet added to GitHub or not working"
+    SKIP_KEY_ADD=false
+    
+    # Display public key
+    echo ""
+    echo "📋 Your public SSH key:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    cat "${key_path%.*}.pub"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "📝 If key is not on GitHub, add it:"
+    echo "1. Copy the public key above"
+    echo "2. Go to: https://github.com/settings/ssh/new"
+    echo "3. Paste the key"
+    echo "4. Give it a title: 'Polymarket Dashboard WSL'"
+    echo "5. Click 'Add SSH key'"
+    echo ""
+    read -p "Press Enter to continue..."
+fi
 
 # Add to SSH agent
+echo ""
 echo "Adding key to SSH agent..."
 eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add "${key_path%.*}" 2>/dev/null || true
 
-echo ""
-echo "📝 Next steps:"
-echo ""
-echo "1. Copy the public key above (the entire key)"
-echo "2. Go to: https://github.com/settings/ssh/new"
-echo "3. Paste the key"
-echo "4. Give it a title: 'Polymarket Dashboard WSL'"
-echo "5. Click 'Add SSH key'"
-echo ""
-read -p "Press Enter after you've added the key to GitHub..."
-
 # Test SSH connection
 echo ""
 echo "Testing SSH connection to GitHub..."
-if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+SSH_TEST=$(ssh -T git@github.com 2>&1)
+if echo "$SSH_TEST" | grep -q "successfully authenticated" || echo "$SSH_TEST" | grep -q "Hi Millionaireguardian"; then
     echo "✅ SSH authentication working!"
+    echo "   $SSH_TEST"
 else
-    echo "⚠️  SSH test inconclusive (this is OK)"
+    echo "⚠️  SSH test output:"
+    echo "$SSH_TEST"
+    echo ""
+    echo "If authentication failed, make sure your SSH key is added to GitHub:"
+    echo "   https://github.com/settings/ssh"
 fi
 
 # Configure git remote to use SSH
