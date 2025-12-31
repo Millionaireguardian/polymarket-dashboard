@@ -87,21 +87,33 @@ if git fetch "$REMOTE_URL" main 2>/dev/null; then
             fi
         else
             echo "⚠️  Local and remote have diverged. Attempting to merge..."
+            # Configure git to use merge strategy
+            git config pull.rebase false 2>/dev/null || true
+            
             # Try normal merge first
-            if git pull "$REMOTE_URL" main --no-rebase --no-edit 2>/dev/null; then
+            if git pull "$REMOTE_URL" main --no-rebase --no-edit --allow-unrelated-histories 2>/dev/null; then
                 echo "✅ Successfully merged remote changes"
-            # If that fails due to unrelated histories, allow it
-            elif git pull "$REMOTE_URL" main --no-rebase --no-edit --allow-unrelated-histories; then
-                echo "✅ Successfully merged unrelated histories"
             else
-                echo "⚠️  Merge failed. Attempting with allow-unrelated-histories..."
-                # Try with allow-unrelated-histories explicitly
-                if git pull "$REMOTE_URL" main --allow-unrelated-histories --no-edit; then
-                    echo "✅ Successfully merged unrelated histories"
+                # Check if we have conflicts
+                if [ -f .git/MERGE_HEAD ]; then
+                    echo "⚠️  Merge conflicts detected. Attempting to resolve..."
+                    # Try to resolve conflicts automatically
+                    if bash resolve-conflict.sh 2>/dev/null; then
+                        echo "✅ Conflicts resolved automatically"
+                    else
+                        echo "❌ Could not automatically resolve conflicts."
+                        echo ""
+                        echo "💡 Run this to resolve conflicts:"
+                        echo "   bash resolve-conflict.sh"
+                        echo ""
+                        echo "Or manually resolve conflicts in:"
+                        git diff --name-only --diff-filter=U
+                        echo ""
+                        echo "Then: git add . && git commit"
+                        exit 1
+                    fi
                 else
-                    echo "❌ Could not automatically merge diverged branches."
-                    echo "   You may need to resolve conflicts manually or use:"
-                    echo "   git pull $REMOTE_URL main --allow-unrelated-histories"
+                    echo "❌ Could not merge. Please check the error above."
                     exit 1
                 fi
             fi
