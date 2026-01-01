@@ -316,26 +316,36 @@ async function loadTrades() {
         
         tradesData = Array.isArray(data) ? data : [];
         
-        // Log for debugging
+        // Log for debugging - check BEFORE updating
         const previousTradeCount = tradesData.length;
-        const newTradeCount = Array.isArray(data) ? data.length : 0;
+        const previousLastTradeTime = tradesData.length > 0 ? tradesData[tradesData.length - 1]?.timestamp : null;
+        
+        // Update tradesData
+        tradesData = Array.isArray(data) ? data : [];
+        const newTradeCount = tradesData.length;
         
         if (newTradeCount > 0) {
-            const lastTrade = data[data.length - 1];
+            const lastTrade = tradesData[tradesData.length - 1];
             const lastBalance = parseFloat(lastTrade.balance || 0);
-            console.log(`✅ Loaded ${newTradeCount} trades (was ${previousTradeCount}). Last trade: ${lastTrade.timestamp}`);
+            const lastTradeTime = lastTrade.timestamp;
+            
+            console.log(`✅ Loaded ${newTradeCount} trades (was ${previousTradeCount}). Last trade: ${lastTradeTime}`);
             console.log(`   Latest balance: $${lastBalance.toFixed(2)}`);
             
-            // Check if new trades were added
-            if (newTradeCount > previousTradeCount) {
-                console.log(`🆕 ${newTradeCount - previousTradeCount} new trade(s) detected!`);
+            // Check if new trades were added by comparing timestamps
+            const hasNewTrades = !previousLastTradeTime || 
+                                 lastTradeTime !== previousLastTradeTime || 
+                                 newTradeCount > previousTradeCount;
+            
+            if (hasNewTrades) {
+                const newTradesCount = newTradeCount > previousTradeCount ? newTradeCount - previousTradeCount : 1;
+                console.log(`🆕 ${newTradesCount} new trade(s) detected! Forcing full refresh...`);
+            } else {
+                console.log(`ℹ️  No new trades (same data as before)`);
             }
         } else {
             console.log('ℹ️  No trades found in data file (empty array)');
         }
-        
-        // Update tradesData
-        tradesData = Array.isArray(data) ? data : [];
         
         updateStatus(true);
         
