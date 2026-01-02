@@ -315,6 +315,9 @@ async function loadTrades() {
             return;
         }
         
+        // Log file content size for debugging
+        console.log(`📊 Loaded trades.json: ${(text.length / 1024).toFixed(2)} KB`);
+        
         let data;
         try {
             data = JSON.parse(text);
@@ -333,6 +336,14 @@ async function loadTrades() {
         // Update tradesData
         tradesData = Array.isArray(data) ? data : [];
         const newTradeCount = tradesData.length;
+        
+        // Log data summary
+        console.log(`📊 Parsed ${newTradeCount} trades from JSON`);
+        if (newTradeCount > 0) {
+            const completeTrades = tradesData.filter(t => t.isComplete === true).length;
+            const transactions = tradesData.filter(t => t.isTransaction === true).length;
+            console.log(`   Complete trades: ${completeTrades}, Transactions: ${transactions}`);
+        }
         
         if (newTradeCount > 0) {
             const lastTrade = tradesData[tradesData.length - 1];

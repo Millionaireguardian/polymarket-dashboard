@@ -139,5 +139,31 @@
     "amount": 3,
     "pnl": 2.9696969696969697,
     "balance": 50.875604
+  },
+  {
+    "timestamp": "2026-01-02T15:25:13.821Z",
+    "tradeId": "spread-1767367513820-l2x30i",
+    "market": "Will the Pittsburgh Steelers make the playoffs?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "isComplete": false,
+    "isTransaction": true,
+    "price": 0.01,
+    "amount": 3,
+    "pnl": 0,
+    "balance": 47.875604
+  },
+  {
+    "timestamp": "2026-01-02T15:25:13.914Z",
+    "tradeId": "spread-1767367513913-kt3nbw",
+    "market": "Will the Baltimore Ravens make the playoffs?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "isComplete": false,
+    "isTransaction": true,
+    "price": 0.99,
+    "amount": 3,
+    "pnl": 0,
+    "balance": 50.875604
   }
 ]
