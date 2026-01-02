@@ -79,5 +79,15 @@
     "amount": 2.5510204081632653,
     "pnl": 2.525252525252525,
     "balance": 55.97764481632654
+  },
+  {
+    "timestamp": "2026-01-02T09:03:02.287Z",
+    "market": "Will the Pittsburgh Steelers win the AFC North?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 249.99999999999997,
+    "balance": 48.324583591836735
   }
 ]
