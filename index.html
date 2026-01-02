@@ -83,17 +83,59 @@
             </div>
         </div>
 
-        <!-- Trade History -->
+        <!-- Trade History with Tabs -->
         <div class="trades-section">
             <div class="trades-header">
                 <h2>Trade History</h2>
+                <div class="tabs-container">
+                    <button class="tab-btn active" data-tab="complete">Complete Trades</button>
+                    <button class="tab-btn" data-tab="transactions">Entries & Exits</button>
+                </div>
                 <div class="search-container">
                     <input type="text" id="searchInput" placeholder="Search by market..." class="search-input">
                     <button id="clearSearch" class="clear-btn">Clear</button>
                 </div>
             </div>
             <div class="table-container">
-                <table id="tradesTable">
+                <!-- Complete Trades Table -->
+                <table id="tradesTable" class="trade-table active">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="timestamp">
+                                Timestamp <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="market">
+                                Market <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="buyPrice">
+                                Buy Price <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="sellPrice">
+                                Sell Price <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="amount">
+                                Size <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="pnl">
+                                Net P&L <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="profitPercent">
+                                Profit % <span class="sort-icon">↕</span>
+                            </th>
+                            <th class="sortable" data-sort="balance">
+                                Balance After <span class="sort-icon">↕</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradesBody">
+                        <tr>
+                            <td colspan="8" class="loading">Loading trades...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Transactions Table -->
+                <table id="transactionsTable" class="trade-table">
                     <thead>
                         <tr>
                             <th class="sortable" data-sort="timestamp">
@@ -111,17 +153,14 @@
                             <th class="sortable" data-sort="amount">
                                 Amount <span class="sort-icon">↕</span>
                             </th>
-                            <th class="sortable" data-sort="pnl">
-                                P&L <span class="sort-icon">↕</span>
-                            </th>
                             <th class="sortable" data-sort="balance">
                                 Balance After <span class="sort-icon">↕</span>
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="tradesBody">
+                    <tbody id="transactionsBody">
                         <tr>
-                            <td colspan="7" class="loading">Loading trades...</td>
+                            <td colspan="6" class="loading">Loading transactions...</td>
                         </tr>
                     </tbody>
                 </table>

@@ -48,9 +48,11 @@ let balanceChart = null;
 let winRateChart = null;
 let tradesData = [];
 let filteredTrades = [];
+let filteredTransactions = [];
 let sortColumn = 'timestamp';
 let sortDirection = 'desc';
 let searchQuery = '';
+let activeTab = 'complete'; // 'complete' or 'transactions'
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
@@ -86,6 +88,14 @@ function setupEventListeners() {
             filterAndRenderTrades();
         });
     }
+    
+    // Tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            switchTab(tab);
+        });
+    });
 
     // Sortable table headers
     document.querySelectorAll('.sortable').forEach(header => {
@@ -660,7 +670,13 @@ function updateSummaryCards(balance, balanceChange, balanceChangePercent, totalP
 function updateWinRateChart() {
     if (!winRateChart) return;
     
-    const trades = tradesData;
+    // PRIORITY: Only use complete trades for win rate (not transactions)
+    const completeTrades = tradesData.filter(trade => 
+        trade.isComplete === true || 
+        (trade.action === 'COMPLETE' && trade.pnl !== undefined && trade.pnl !== 0)
+    );
+    
+    const trades = completeTrades;
     const wins = trades.filter(t => (t.pnl || 0) > 0).length;
     const losses = trades.filter(t => (t.pnl || 0) < 0).length;
     
@@ -668,17 +684,110 @@ function updateWinRateChart() {
     winRateChart.update('none');
 }
 
+// Switch between tabs
+function switchTab(tab) {
+    activeTab = tab;
+    
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tab) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    
+    // Show/hide tables
+    const tradesTable = document.getElementById('tradesTable');
+    const transactionsTable = document.getElementById('transactionsTable');
+    
+    if (tab === 'complete') {
+        if (tradesTable) tradesTable.classList.add('active');
+        if (transactionsTable) transactionsTable.classList.remove('active');
+    } else {
+        if (tradesTable) tradesTable.classList.remove('active');
+        if (transactionsTable) transactionsTable.classList.add('active');
+    }
+    
+    filterAndRenderTrades();
+}
+
 // Filter and render trades table
 function filterAndRenderTrades() {
-    // Filter by search query
-    filteredTrades = tradesData.filter(trade => {
+    // Separate complete trades from transactions
+    const completeTrades = tradesData.filter(trade => 
+        trade.isComplete === true || 
+        (trade.action === 'COMPLETE' && trade.pnl !== undefined && trade.pnl !== 0)
+    );
+    
+    const transactions = tradesData.filter(trade => 
+        trade.isTransaction === true || 
+        trade.isComplete === false ||
+        (trade.action !== 'COMPLETE' && (trade.pnl === undefined || trade.pnl === 0))
+    );
+    
+    // Filter complete trades by search query
+    filteredTrades = completeTrades.filter(trade => {
         if (!searchQuery) return true;
         const market = (trade.market || '').toLowerCase();
         return market.includes(searchQuery);
     });
     
-    // Sort trades
+    // Filter transactions by search query
+    filteredTransactions = transactions.filter(trade => {
+        if (!searchQuery) return true;
+        const market = (trade.market || '').toLowerCase();
+        return market.includes(searchQuery);
+    });
+    
+    // Sort complete trades
     filteredTrades.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch (sortColumn) {
+            case 'timestamp':
+                aVal = new Date(a.timestamp);
+                bVal = new Date(b.timestamp);
+                break;
+            case 'market':
+                aVal = (a.market || '').toLowerCase();
+                bVal = (b.market || '').toLowerCase();
+                break;
+            case 'buyPrice':
+                aVal = parseFloat(a.buyPrice || a.price || 0);
+                bVal = parseFloat(b.buyPrice || b.price || 0);
+                break;
+            case 'sellPrice':
+                aVal = parseFloat(a.sellPrice || a.price || 0);
+                bVal = parseFloat(b.sellPrice || b.price || 0);
+                break;
+            case 'amount':
+                aVal = parseFloat(a.amount || 0);
+                bVal = parseFloat(b.amount || 0);
+                break;
+            case 'pnl':
+                aVal = parseFloat(a.pnl || 0);
+                bVal = parseFloat(b.pnl || 0);
+                break;
+            case 'profitPercent':
+                aVal = parseFloat(a.profitPercent || 0);
+                bVal = parseFloat(b.profitPercent || 0);
+                break;
+            case 'balance':
+                aVal = parseFloat(a.balance || 0);
+                bVal = parseFloat(b.balance || 0);
+                break;
+            default:
+                return 0;
+        }
+        
+        if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+    
+    // Sort transactions
+    filteredTransactions.sort((a, b) => {
         let aVal, bVal;
         
         switch (sortColumn) {
@@ -702,10 +811,6 @@ function filterAndRenderTrades() {
                 aVal = parseFloat(a.amount || 0);
                 bVal = parseFloat(b.amount || 0);
                 break;
-            case 'pnl':
-                aVal = parseFloat(a.pnl || 0);
-                bVal = parseFloat(b.pnl || 0);
-                break;
             case 'balance':
                 aVal = parseFloat(a.balance || 0);
                 bVal = parseFloat(b.balance || 0);
@@ -719,10 +824,14 @@ function filterAndRenderTrades() {
         return 0;
     });
     
-    renderTradesTable();
+    if (activeTab === 'complete') {
+        renderTradesTable();
+    } else {
+        renderTransactionsTable();
+    }
 }
 
-// Render trades table
+// Render complete trades table
 function renderTradesTable() {
     const tbody = document.getElementById('tradesBody');
     if (!tbody) return;
@@ -730,23 +839,23 @@ function renderTradesTable() {
     if (filteredTrades.length === 0) {
         let message;
         if (searchQuery) {
-            message = `No trades found matching "${searchQuery}"`;
+            message = `No complete trades found matching "${searchQuery}"`;
         } else if (tradesData.length === 0) {
             message = `
                 <div style="text-align: center; padding: 40px;">
                     <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
                     <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px;">
-                        No trades yet
+                        No complete trades yet
                     </div>
                     <div style="font-size: 14px; color: var(--text-secondary); max-width: 400px; margin: 0 auto; line-height: 1.6;">
-                        Bot is running in dry-run mode. Trades will appear here once the bot detects arbitrage opportunities.
+                        Complete trades (both BUY and SELL filled) will appear here with profit/loss calculations.
                     </div>
                 </div>
             `;
         } else {
-            message = 'No trades found matching your search.';
+            message = 'No complete trades found matching your search.';
         }
-        tbody.innerHTML = `<tr><td colspan="7" class="empty">${message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">${message}</td></tr>`;
         return;
     }
     
@@ -798,12 +907,13 @@ function renderTradesTable() {
         tradesWithBalance.set(trade.timestamp, balance);
     }
     
-    // Now render filtered trades in the user's preferred sort order
-    // (filteredTrades is already sorted by filterAndRenderTrades)
+    // Now render filtered complete trades in the user's preferred sort order
     tbody.innerHTML = filteredTrades.map((trade, index) => {
         const amount = parseFloat(trade.amount || 0);
-        const price = parseFloat(trade.price || 0);
+        const buyPrice = parseFloat(trade.buyPrice || trade.price || 0);
+        const sellPrice = parseFloat(trade.sellPrice || trade.price || 0);
         let pnl = parseFloat(trade.pnl || 0);
+        const profitPercent = parseFloat(trade.profitPercent || 0);
         
         // Get balance from pre-calculated map (calculated chronologically)
         let balance = tradesWithBalance.get(trade.timestamp);
@@ -815,9 +925,100 @@ function renderTradesTable() {
             }
         }
         
-        // If P&L is 0 (dry-run), show as "-" or calculate from price movement
-        const pnlDisplay = pnl !== 0 ? formatCurrency(pnl) : '-';
+        const pnlDisplay = formatCurrency(pnl);
         const pnlClass = pnl > 0 ? 'pnl-positive' : (pnl < 0 ? 'pnl-negative' : 'pnl-neutral');
+        const profitPercentDisplay = profitPercent !== 0 ? `${profitPercent > 0 ? '+' : ''}${profitPercent.toFixed(2)}%` : '-';
+        const profitPercentClass = profitPercent > 0 ? 'pnl-positive' : (profitPercent < 0 ? 'pnl-negative' : 'pnl-neutral');
+        
+        return `
+        <tr>
+            <td>${formatTimestamp(trade.timestamp)}</td>
+            <td>${truncate(trade.market || 'Unknown', 40)}</td>
+            <td>$${formatNumber(buyPrice)}</td>
+            <td>$${formatNumber(sellPrice)}</td>
+            <td>$${formatCurrency(amount)}</td>
+            <td class="${pnlClass}">
+                ${pnlDisplay}
+            </td>
+            <td class="${profitPercentClass}">
+                ${profitPercentDisplay}
+            </td>
+            <td>$${formatCurrency(balance)}</td>
+        </tr>
+    `;
+    }).join('');
+}
+
+// Render transactions table
+function renderTransactionsTable() {
+    const tbody = document.getElementById('transactionsBody');
+    if (!tbody) return;
+    
+    if (filteredTransactions.length === 0) {
+        let message;
+        if (searchQuery) {
+            message = `No transactions found matching "${searchQuery}"`;
+        } else {
+            message = 'No transactions found.';
+        }
+        tbody.innerHTML = `<tr><td colspan="6" class="empty">${message}</td></tr>`;
+        return;
+    }
+    
+    // Calculate balances chronologically
+    const allTradesChronological = [...tradesData].sort((a, b) => 
+        new Date(a.timestamp) - new Date(b.timestamp)
+    );
+    
+    const tradesWithBalance = new Map();
+    let runningBalance = null;
+    
+    const firstTradeChronological = allTradesChronological[0];
+    if (firstTradeChronological) {
+        if (firstTradeChronological.initialBalance) {
+            runningBalance = parseFloat(firstTradeChronological.initialBalance);
+        } else {
+            const firstBalance = parseFloat(firstTradeChronological.balance || 0);
+            const firstAmount = parseFloat(firstTradeChronological.amount || 0);
+            if (firstBalance > 0) {
+                runningBalance = firstBalance + firstAmount;
+            } else {
+                runningBalance = 50;
+            }
+        }
+    } else {
+        runningBalance = 50;
+    }
+    
+    for (const trade of allTradesChronological) {
+        const amount = parseFloat(trade.amount || 0);
+        let balance = parseFloat(trade.balance || 0);
+        
+        if (balance <= 0 || isNaN(balance)) {
+            if (trade.action === 'BUY') {
+                balance = runningBalance - amount;
+            } else if (trade.action === 'SELL') {
+                balance = runningBalance + amount;
+            } else {
+                balance = runningBalance - amount;
+            }
+        }
+        
+        runningBalance = balance;
+        tradesWithBalance.set(trade.timestamp, balance);
+    }
+    
+    tbody.innerHTML = filteredTransactions.map((trade, index) => {
+        const amount = parseFloat(trade.amount || 0);
+        const price = parseFloat(trade.price || 0);
+        
+        let balance = tradesWithBalance.get(trade.timestamp);
+        if (!balance || balance <= 0 || isNaN(balance)) {
+            balance = parseFloat(trade.balance || 0);
+            if (balance <= 0 || isNaN(balance)) {
+                balance = 0;
+            }
+        }
         
         return `
         <tr>
@@ -826,9 +1027,6 @@ function renderTradesTable() {
             <td class="action-${(trade.action || 'BUY').toLowerCase()}">${trade.action || 'BUY'}</td>
             <td>$${formatNumber(price)}</td>
             <td>$${formatCurrency(amount)}</td>
-            <td class="${pnlClass}">
-                ${pnlDisplay}
-            </td>
             <td>$${formatCurrency(balance)}</td>
         </tr>
     `;
