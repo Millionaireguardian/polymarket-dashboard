@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "timestamp": "2026-01-01T17:17:40.469Z",
+    "market": "Will Hyperliquid dip to $12 in January?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 1.2755102040816326,
+    "balance": 48.324583591836735,
+    "initialBalance": 50.875604
+  },
+  {
+    "timestamp": "2026-01-01T19:18:13.315Z",
+    "market": "Will Chainlink hit $19 in January?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 1.2755102040816326,
+    "balance": 48.324583591836735
+  },
+  {
+    "timestamp": "2026-01-01T19:18:13.408Z",
+    "market": "Will Chainlink hit $17 in January?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 1.2755102040816326,
+    "balance": 45.77356318367347
+  },
+  {
+    "timestamp": "2026-01-01T19:18:13.494Z",
+    "market": "Will Chainlink hit $13 in January?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 1.2755102040816326,
+    "balance": 43.2225427755102
+  },
+  {
+    "timestamp": "2026-01-01T19:18:13.495Z",
+    "market": "Will Chainlink hit $13 in January?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "price": 0.99,
+    "amount": 2.5510204081632653,
+    "pnl": 0.012883941455370028,
+    "balance": 45.77356318367347
+  },
+  {
+    "timestamp": "2026-01-01T19:18:13.721Z",
+    "market": "Will BNB dip to $700 in January?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 2.5510204081632653,
+    "pnl": 1.2755102040816326,
+    "balance": 43.2225427755102
+  },
+  {
+    "timestamp": "2026-01-01T19:33:11.858Z",
+    "market": "Will the price of Ethereum be above $3,000 on January 8?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "price": 0.99,
+    "amount": 2.5510204081632653,
+    "pnl": 2.525252525252525,
+    "balance": 53.42662440816327
+  },
+  {
+    "timestamp": "2026-01-01T19:33:12.456Z",
+    "market": "Will Chainlink dip to $10 in January?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "price": 0.99,
+    "amount": 2.5510204081632653,
+    "pnl": 2.525252525252525,
+    "balance": 55.97764481632654
+  }
+]
