@@ -165,5 +165,31 @@
     "amount": 3,
     "pnl": 0,
     "balance": 50.875604
+  },
+  {
+    "timestamp": "2026-01-02T15:44:43.536Z",
+    "tradeId": "spread-1767368662024-cb2ba7",
+    "market": "Will Mike Vrabel win NFL Coach of the Year?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "isComplete": false,
+    "isTransaction": true,
+    "price": 0.99,
+    "amount": 3,
+    "pnl": 0,
+    "balance": 53.875604
+  },
+  {
+    "timestamp": "2026-01-02T15:44:44.666Z",
+    "tradeId": "spread-1767368684665-gvtqq",
+    "market": "Will the Pittsburgh Steelers win the AFC North?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "isComplete": false,
+    "isTransaction": true,
+    "price": 0.01,
+    "amount": 3,
+    "pnl": 0,
+    "balance": 50.875604
   }
 ]
