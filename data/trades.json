@@ -89,5 +89,35 @@
     "amount": 2.5510204081632653,
     "pnl": 249.99999999999997,
     "balance": 48.324583591836735
+  },
+  {
+    "timestamp": "2026-01-02T14:06:51.309Z",
+    "market": "Will Mike Vrabel win NFL Coach of the Year?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 3,
+    "pnl": 294,
+    "balance": 47.875604
+  },
+  {
+    "timestamp": "2026-01-02T14:06:51.893Z",
+    "market": "Will the Pittsburgh Steelers make the playoffs?",
+    "action": "SELL",
+    "tradeType": "SPREAD",
+    "price": 0.99,
+    "amount": 3,
+    "pnl": 2.9696969696969697,
+    "balance": 50.875604
+  },
+  {
+    "timestamp": "2026-01-02T14:06:52.005Z",
+    "market": "Will the Pittsburgh Steelers win the AFC North?",
+    "action": "BUY",
+    "tradeType": "SPREAD",
+    "price": 0.01,
+    "amount": 3,
+    "pnl": 294,
+    "balance": 47.875604
   }
 ]
